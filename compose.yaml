@@ -47,8 +47,6 @@ services:
   beacon:
     image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
     command:
-      - prysm
-      - beacon-chain
       - --accept-terms-of-use=true
       - --datadir=./consensus-data
       - --chain-config-file=./el-cl-genesis-data/custom_config_data/config.yaml
