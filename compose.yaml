@@ -1,0 +1,118 @@
+version: "3.8"
+
+services:
+  executor:
+    image: ethereum/client-go:v1.13.4
+    command:
+      - --networkid=28256
+      - --state.scheme=path
+      - --verbosity=3
+      - --datadir=/execution-data
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.vhosts=*
+      - --http.corsdomain=*
+      - --http.api=admin,engine,net,eth,web3,debug
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.api=admin,engine,net,eth,web3,debug
+      - --ws.origins=*
+      - --allow-insecure-unlock
+      - --nat=extip:${IP_ADDRESS}
+      - --verbosity=3
+      - --authrpc.port=8551
+      - --authrpc.addr=0.0.0.0
+      - --authrpc.vhosts=*
+      - --authrpc.jwtsecret=/el-cl-genesis-data/jwt/jwtsecret
+      - --syncmode=full
+      - --rpc.allow-unprotected-txs
+      - --metrics
+      - --metrics.addr=0.0.0.0
+      - --metrics.port=9001
+      - --port=50403
+      - --networkid=28256
+      - --bootnodes=enode://de18715ae94d2545c70f396feadf3d88da1bb0ad1a845c2b1f6d98f1075ec4c05651f0fb4388f2c256731590636a799243b7d25839848add1efffd1eecf7edf2@88.99.94.109:50303
+    volumes:
+      - ./execution-data:/execution-data
+      - ./el-cl-genesis-data:/el-cl-genesis-data
+    ports:
+      - "10745:8545" 
+      - "10746:8546" 
+      - "10751:8551" 
+      - "11201:9001" 
+      - "50503:50403"
+    restart: unless-stopped
+
+  beacon:
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
+    command:
+      - beacon-chain
+      - --accept-terms-of-use=true
+      - --datadir=./consensus-data
+      - --chain-config-file=./el-cl-genesis-data/custom_config_data/config.yaml
+      - --genesis-state=./el-cl-genesis-data/custom_config_data/genesis.ssz
+      - --execution-endpoint=http://88.99.94.109:8851
+      - --rpc-host=0.0.0.0
+      - --rpc-port=4509
+      - --grpc-gateway-host=0.0.0.0
+      - --grpc-gateway-corsdomain=*
+      - --grpc-gateway-port=4510
+      - --p2p-host-ip=88.99.94.109
+      - --p2p-tcp-port=13000
+      - --p2p-udp-port=12000
+      - --min-sync-peers=0
+      - --verbosity=info
+      - --slots-per-archive-point=32
+      - --suggested-fee-recipient=0x8943545177806ED17B9F23F0a21ee5948eCaa776
+      - --subscribe-all-subnets=true
+      - --jwt-secret=./el-cl-genesis-data/jwt/jwtsecret
+      - --disable-monitoring=false
+      - --monitoring-host=0.0.0.0
+      - --monitoring-port=13080
+      - --p2p-static-id=true
+      - --bootstrap-node=enr:-MS4QMw-J1WxLjEExb3w2DPod-15h8JVLoZtWp8-fzZjcIvqMBWZWFw90Xkfc-mNFM45WKtMXHn_jw3J-kKf8MW4qeVFh2F0dG5ldHOI__________-EZXRoMpAjvkwgQAAAOP__________gmlkgnY0gmlwhFhjXm2EcXVpY4Iq-YlzZWNwMjU2azGhAii_bzHcO9ydFheDTk140o6hvL0tnMTd89PPGnINuuORiHN5bmNuZXRzD4N0Y3CCKviDdWRwgir4
+      - --peer=/ip4/88.99.94.109/tcp/11000/p2p/16Uiu2HAkxAjbNY3VD7fS4w3f6pfk2dnKiAPr6tDQtd2vvUmEX54L
+      - --checkpoint-sync-url=http://88.99.94.109:9781
+      - --genesis-beacon-api-url=http://88.99.94.109:9781
+    volumes:
+      - ./consensus-data:/consensus-data 
+      - ./el-cl-genesis-data:/el-cl-genesis-data
+    ports:
+      - "11300:11100/udp"
+      - "11300:11100/tcp" 
+      - "4400:4000"
+      - "7254:5054"
+    depends_on:
+      - executor
+    restart: unless-stopped
+
+  # lighthouse-validator:
+  #   image: sigp/lighthouse:v4.5.0
+  #   command:
+  #     - lighthouse
+  #     - validator_client
+  #     - --debug-level=info
+  #     - --testnet-dir=/el-cl-genesis-data/custom_config_data
+  #     - --validators-dir=/validator-keys/node-0-keystores/keys
+  #     - --secrets-dir=/validator-keys/node-0-keystores/secrets
+  #     - --init-slashing-protection
+  #     - --http
+  #     - --unencrypted-http-transport
+  #     - --http-address=0.0.0.0
+  #     - --http-port=5042
+  #     - --beacon-nodes=http://lighthouse-beacon:4000
+  #     - --suggested-fee-recipient=0x8943545177806ED17B9F23F0a21ee5948eCaa776
+  #     - --metrics
+  #     - --metrics-address=0.0.0.0
+  #     - --metrics-allow-origin=*
+  #     - --metrics-port=5064
+  #   volumes:
+  #     - ./el-cl-genesis-data:/el-cl-genesis-data
+  #     - ./validator-keys:/validator-keys
+  #   ports:
+  #     - "7042:5042"
+  #     - "7064:5064"
+  #   depends_on:
+  #     - lighthouse-beacon
+  #   restart: unless-stopped
