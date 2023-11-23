@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  executor:
+  execution:
     image: ethereum/client-go:v1.13.4
     command:
       - --networkid=28256
@@ -51,7 +51,7 @@ services:
       - --datadir=/consensus-data
       - --chain-config-file=/el-cl-genesis-data/custom_config_data/config.yaml
       - --genesis-state=/el-cl-genesis-data/custom_config_data/genesis.ssz
-      - --execution-endpoint=http://executor:8851
+      - --execution-endpoint=http://execution:8851
       - --rpc-host=0.0.0.0
       - --rpc-port=4509
       - --grpc-gateway-host=0.0.0.0
@@ -72,8 +72,8 @@ services:
       - --p2p-static-id=true
       - --bootstrap-node=enr:-MS4QMw-J1WxLjEExb3w2DPod-15h8JVLoZtWp8-fzZjcIvqMBWZWFw90Xkfc-mNFM45WKtMXHn_jw3J-kKf8MW4qeVFh2F0dG5ldHOI__________-EZXRoMpAjvkwgQAAAOP__________gmlkgnY0gmlwhFhjXm2EcXVpY4Iq-YlzZWNwMjU2azGhAii_bzHcO9ydFheDTk140o6hvL0tnMTd89PPGnINuuORiHN5bmNuZXRzD4N0Y3CCKviDdWRwgir4
       - --peer=/ip4/88.99.94.109/tcp/11000/p2p/16Uiu2HAkxAjbNY3VD7fS4w3f6pfk2dnKiAPr6tDQtd2vvUmEX54L
-      - --checkpoint-sync-url=http://88.99.94.109:9781
-      - --genesis-beacon-api-url=http://88.99.94.109:9781
+      - --checkpoint-sync-url=http://88.99.94.109:4200
+      - --genesis-beacon-api-url=http://88.99.94.109:4200
     volumes:
       - ./consensus-data:/consensus-data 
       - ./el-cl-genesis-data:/el-cl-genesis-data
@@ -82,8 +82,10 @@ services:
       - "11300:11100/tcp" 
       - "4400:4000"
       - "7254:5054"
+      - "13180:13080"
+      - "12100:12000"
     depends_on:
-      - executor
+      - execution
     restart: unless-stopped
 
   # lighthouse-validator:
