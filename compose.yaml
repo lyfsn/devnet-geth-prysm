@@ -45,19 +45,19 @@ services:
     restart: unless-stopped
 
   beacon:
-    image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
+    image: prysmaticlabs/prysm-beacon-chain:latest
     command:
       - --accept-terms-of-use=true
       - --datadir=/consensus-data
       - --chain-config-file=/el-cl-genesis-data/custom_config_data/config.yaml
       - --genesis-state=/el-cl-genesis-data/custom_config_data/genesis.ssz
-      - --execution-endpoint=http://88.99.94.109:8851
+      - --execution-endpoint=http://executor:8851
       - --rpc-host=0.0.0.0
       - --rpc-port=4509
       - --grpc-gateway-host=0.0.0.0
       - --grpc-gateway-corsdomain=*
       - --grpc-gateway-port=4510
-      - --p2p-host-ip=88.99.94.109
+      - --p2p-host-ip=${IP_ADDRESS}
       - --p2p-tcp-port=13000
       - --p2p-udp-port=12000
       - --min-sync-peers=0
