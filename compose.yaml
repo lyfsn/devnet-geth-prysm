@@ -48,9 +48,9 @@ services:
     image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
     command:
       - --accept-terms-of-use=true
-      - --datadir=./consensus-data
-      - --chain-config-file=./el-cl-genesis-data/custom_config_data/config.yaml
-      - --genesis-state=./el-cl-genesis-data/custom_config_data/genesis.ssz
+      - --datadir=/consensus-data
+      - --chain-config-file=/el-cl-genesis-data/custom_config_data/config.yaml
+      - --genesis-state=/el-cl-genesis-data/custom_config_data/genesis.ssz
       - --execution-endpoint=http://88.99.94.109:8851
       - --rpc-host=0.0.0.0
       - --rpc-port=4509
@@ -65,7 +65,7 @@ services:
       - --slots-per-archive-point=32
       - --suggested-fee-recipient=0x8943545177806ED17B9F23F0a21ee5948eCaa776
       - --subscribe-all-subnets=true
-      - --jwt-secret=./el-cl-genesis-data/jwt/jwtsecret
+      - --jwt-secret=/el-cl-genesis-data/jwt/jwtsecret
       - --disable-monitoring=false
       - --monitoring-host=0.0.0.0
       - --monitoring-port=13080
