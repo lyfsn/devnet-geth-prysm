@@ -110,8 +110,8 @@ services:
       - ./validator-keys:/validator-keys
       - ./prysm-password:/prysm-password
     ports:
-      - "7042:5042"
-      - "7064:5064"
+      - "7942:5042"
+      - "7964:5064"
     depends_on:
       - beacon
     restart: unless-stopped
