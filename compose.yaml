@@ -32,16 +32,16 @@ services:
       - --metrics.port=9001
       - --port=50403
       - --networkid=28256
-      - --bootnodes=enode://de18715ae94d2545c70f396feadf3d88da1bb0ad1a845c2b1f6d98f1075ec4c05651f0fb4388f2c256731590636a799243b7d25839848add1efffd1eecf7edf2@88.99.94.109:50303
+      - --bootnodes=enode://30674d1f5fa3cf763c2d991eeaf585db42c45737a4d47aee3653b50ac33947437769e13f04c12bab63d5c2a416d08b2637e6340d13b7d59489f0ac8dae919756@88.99.94.109:50303
     volumes:
       - ./execution-data:/execution-data
       - ./el-cl-genesis-data:/el-cl-genesis-data
     ports:
-      - "10745:8545" 
-      - "10746:8546" 
-      - "10751:8551" 
-      - "11401:9001" 
-      - "50703:50403"
+      - "10645:8545" 
+      - "10646:8546" 
+      - "10651:8551" 
+      - "11101:9001" 
+      - "50403:50403"
     restart: unless-stopped
 
   beacon:
@@ -51,7 +51,7 @@ services:
       - --datadir=/consensus-data
       - --chain-config-file=/el-cl-genesis-data/custom_config_data/config.yaml
       - --genesis-state=/el-cl-genesis-data/custom_config_data/genesis.ssz
-      - --execution-endpoint=http://execution:8851
+      - --execution-endpoint=http://execution:8551
       - --rpc-host=0.0.0.0
       - --rpc-port=4509
       - --grpc-gateway-host=0.0.0.0
@@ -61,7 +61,7 @@ services:
       - --p2p-tcp-port=13000
       - --p2p-udp-port=12000
       - --min-sync-peers=0
-      - --verbosity=info
+      - --verbosity=debug
       - --slots-per-archive-point=32
       - --suggested-fee-recipient=0x8943545177806ED17B9F23F0a21ee5948eCaa776
       - --subscribe-all-subnets=true
@@ -70,50 +70,48 @@ services:
       - --monitoring-host=0.0.0.0
       - --monitoring-port=13080
       - --p2p-static-id=true
-      - --bootstrap-node=enr:-MS4QMw-J1WxLjEExb3w2DPod-15h8JVLoZtWp8-fzZjcIvqMBWZWFw90Xkfc-mNFM45WKtMXHn_jw3J-kKf8MW4qeVFh2F0dG5ldHOI__________-EZXRoMpAjvkwgQAAAOP__________gmlkgnY0gmlwhFhjXm2EcXVpY4Iq-YlzZWNwMjU2azGhAii_bzHcO9ydFheDTk140o6hvL0tnMTd89PPGnINuuORiHN5bmNuZXRzD4N0Y3CCKviDdWRwgir4
-      - --peer=/ip4/88.99.94.109/tcp/11000/p2p/16Uiu2HAkxAjbNY3VD7fS4w3f6pfk2dnKiAPr6tDQtd2vvUmEX54L
-      - --checkpoint-sync-url=http://88.99.94.109:4200
-      - --genesis-beacon-api-url=http://88.99.94.109:4200
+      - --bootstrap-node=enr:-MS4QKjvQWjHjNSlrgJBnwI7j88ULp36kH6FegWreBuiHL0_UGs4EvAxALKLgvKjTFpk6x0zTPyxoXXt0PDeZxlAihgBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpAjvkwgQAAAOP__________gmlkgnY0gmlwhFhjXm2EcXVpY4Iq-YlzZWNwMjU2azGhAoNhfDA57peBhfKlgRRDYKmjwOUPSPqj97hpWmwycgJdiHN5bmNuZXRzAIN0Y3CCKviDdWRwgir4
+      - --peer=/ip4/88.99.94.109/tcp/11000/p2p/16Uiu2HAm4GXc2aYZkdfHvvn56s6zEdoSAwdiNcGkzvXX5y4MX4U4
+      - --checkpoint-sync-url=http://88.99.94.109:9781/
+      - --genesis-beacon-api-url=http://88.99.94.109:9781/
+      - --disable-peer-scorer=true
+      - --historical-slasher-node=true
     volumes:
       - ./consensus-data:/consensus-data 
       - ./el-cl-genesis-data:/el-cl-genesis-data
     ports:
-      - "11300:11100/udp"
-      - "11300:11100/tcp" 
-      - "4400:4000"
-      - "7254:5054"
-      - "13180:13080"
-      - "12100:12000"
+      - "12000:12000/udp"
+      - "13000:13000/tcp" 
+      - "4509:4509"
+      - "4510:4510"
+      - "13080:13080"
     depends_on:
       - execution
     restart: unless-stopped
 
-  # lighthouse-validator:
-  #   image: sigp/lighthouse:v4.5.0
-  #   command:
-  #     - lighthouse
-  #     - validator_client
-  #     - --debug-level=info
-  #     - --testnet-dir=/el-cl-genesis-data/custom_config_data
-  #     - --validators-dir=/validator-keys/node-0-keystores/keys
-  #     - --secrets-dir=/validator-keys/node-0-keystores/secrets
-  #     - --init-slashing-protection
-  #     - --http
-  #     - --unencrypted-http-transport
-  #     - --http-address=0.0.0.0
-  #     - --http-port=5042
-  #     - --beacon-nodes=http://lighthouse-beacon:4000
-  #     - --suggested-fee-recipient=0x8943545177806ED17B9F23F0a21ee5948eCaa776
-  #     - --metrics
-  #     - --metrics-address=0.0.0.0
-  #     - --metrics-allow-origin=*
-  #     - --metrics-port=5064
-  #   volumes:
-  #     - ./el-cl-genesis-data:/el-cl-genesis-data
-  #     - ./validator-keys:/validator-keys
-  #   ports:
-  #     - "7042:5042"
-  #     - "7064:5064"
-  #   depends_on:
-  #     - lighthouse-beacon
-  #   restart: unless-stopped
+  validator:
+    image: prysmaticlabs/prysm-validator:latest
+    command:
+      - --accept-terms-of-use=true
+      - --chain-config-file=/el-cl-genesis-data/custom_config_data/config.yaml
+      - --beacon-rpc-gateway-provider=beacon:4510
+      - --beacon-rpc-provider=beacon:4509
+      - --wallet-dir=/validator-keys/node-3-keystores/prysm
+      - --wallet-password-file=/prysm-password/prysm-password.txt
+      - --datadir=/consensus-data
+      - --monitoring-port=8081
+      - --verbosity=info
+      - --suggested-fee-recipient=0x8943545177806ED17B9F23F0a21ee5948eCaa776
+      - --disable-monitoring=false
+      - --monitoring-host=0.0.0.0
+      - --monitoring-port=8081
+    volumes:
+      - ./el-cl-genesis-data:/el-cl-genesis-data
+      - ./validator-keys:/validator-keys
+      - ./prysm-password:/prysm-password
+    ports:
+      - "7042:5042"
+      - "7064:5064"
+    depends_on:
+      - beacon
+    restart: unless-stopped
