@@ -37,11 +37,11 @@ services:
       - ./execution-data:/execution-data
       - ./el-cl-genesis-data:/el-cl-genesis-data
     ports:
-      - "10645:8545" 
-      - "10646:8546" 
-      - "10651:8551" 
+      - "11045:8545" 
+      - "11046:8546" 
+      - "10751:8551" 
       - "11101:9001" 
-      - "50403:50403"
+      - "51403:50403"
     restart: unless-stopped
 
   beacon:
@@ -82,7 +82,7 @@ services:
     ports:
       - "12000:12000/udp"
       - "13000:13000/tcp" 
-      - "4509:4509"
+      - "4700:4509"
       - "4510:4510"
       - "13080:13080"
     depends_on:
