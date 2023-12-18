@@ -30,8 +30,8 @@ services:
       - --metrics
       - --metrics.addr=0.0.0.0
       - --metrics.port=9001
-      - --port=50403
-      - --networkid=28256
+      - --port=50503
+      - --discovery.port=50503
       - --bootnodes=enode://30674d1f5fa3cf763c2d991eeaf585db42c45737a4d47aee3653b50ac33947437769e13f04c12bab63d5c2a416d08b2637e6340d13b7d59489f0ac8dae919756@88.99.94.109:50303
     volumes:
       - ./execution-data:/execution-data
@@ -41,7 +41,8 @@ services:
       - "11046:8546" 
       - "11051:8551" 
       - "11901:9001" 
-      - "51403:50403"
+      - "50503:50503/udp"
+      - "50503:50503/tcp"
     restart: unless-stopped
 
   beacon:
