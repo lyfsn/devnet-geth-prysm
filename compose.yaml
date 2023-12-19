@@ -71,6 +71,7 @@ services:
       - --monitoring-port=13080
       - --p2p-static-id=true
       - --peer=/ip4/88.99.94.109/tcp/11000/p2p/16Uiu2HAm4GXc2aYZkdfHvvn56s6zEdoSAwdiNcGkzvXX5y4MX4U4
+      - --genesis-beacon-api-url=http://88.99.94.109:9781/
       - --historical-slasher-node=true
     volumes:
       - ./consensus-data:/consensus-data 
